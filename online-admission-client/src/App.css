@@ -1,1 +1,15 @@
+.animate {
+  position: relative;
+  animation: mymove 10s infinite;
+}
 
+@keyframes mymove {
+  from {
+    scale: 0.5;
+  }
+  to {
+    scale: 1;
+    background-color: gainsboro;
+  }
+
+}
