@@ -1,11 +1,12 @@
 import { Link, Outlet } from 'react-router-dom'
 import './App.css'
-
+import logo from './assets/download.png'
 function App() {
 
   return (
     <>
-      <Link to='/'><h1 className='text-5xl shadow-2xl  w-2/4 p-20 border-black font-bold text-center my-5'>Online Admission</h1></Link>
+    <div className='max-w-[1200px] mx-auto pt-2'><a href="https://uob.edu.bd/"><img src={logo} alt="" /></a></div>
+      <Link to='/'><h1 className='text-xl  md:text-4xl shadow-2xl  w-2/4 p-20 border-black font-bold text-center my-5 mx-auto'>Admission Fair Data Collection</h1></Link>
       <Outlet></Outlet>
       <footer className='text-center mt-20'>
         <p className='font-bold '>Powered by</p>

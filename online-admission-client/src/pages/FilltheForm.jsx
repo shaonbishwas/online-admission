@@ -1,7 +1,9 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 function FilltheForm() {
+  const navigate = useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -42,6 +44,7 @@ function FilltheForm() {
           )
           .then(() => {
             Swal.fire("Saved!", "", "success");
+            navigate('/');
           });
       } else if (result.isDenied) {
         Swal.fire("Changes are not saved", "", "error");
