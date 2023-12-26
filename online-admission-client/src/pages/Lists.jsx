@@ -2,7 +2,49 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import Papa from 'papaparse';
 const Lists = () => {
+  const [data, setData] = useState([]);
+  
+  useEffect(() => {
+    axios.get("https://online-admission-server.vercel.app/data").then((res) => {
+      setData(res.data);
+    });
+  }, []);
+  const handleDelete = (id, type) => {
+    console.log(id, type);
+    axios
+      .delete(
+        `https://online-admission-server.vercel.app/delete/${id}?type=${type}`
+      )
+      .then(() => {
+        window.location.reload();
+      });
+  };
+  const jsonToCsv = (jsonData) => {
+    const csv = Papa.unparse(jsonData);
+    return csv;
+  };
+
+  const handleDownloadCSV = async() => {
+    // Fetch data from the API
+    const response = await fetch(
+      "https://online-admission-server.vercel.app/data"
+    );
+    const students = await response.json();
+    const csvData = jsonToCsv(students);
+
+    const blob = new Blob([csvData], { type: 'text/csv' });
+    const link = document.createElement('a');
+
+    link.href = window.URL.createObjectURL(blob);
+    link.download = 'api_data.csv';
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+  };
   const generatePDF = async () => {
     try {
       // Fetch data from the API
@@ -52,22 +94,6 @@ const Lists = () => {
     } catch (error) {
       console.error("Error generating PDF:", error);
     }
-  };
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    axios.get("https://online-admission-server.vercel.app/data").then((res) => {
-      setData(res.data);
-    });
-  }, []);
-  const handleDelete = (id, type) => {
-    console.log(id, type);
-    axios
-      .delete(
-        `https://online-admission-server.vercel.app/delete/${id}?type=${type}`
-      )
-      .then(() => {
-        window.location.reload();
-      });
   };
   return (
     <div>
@@ -137,7 +163,16 @@ const Lists = () => {
           className="font-bold border p-2 rounded-3xl hover:bg-slate-700 hover:text-white"
           onClick={generatePDF}
         >
-          Download pdf
+          Download PDF
+        </button>
+      </div>
+      <div className="text-center p-5">
+        <button
+          disabled={data.length == 0 ? true : false}
+          className="font-bold border p-2 rounded-3xl hover:bg-slate-700 hover:text-white"
+          onClick={handleDownloadCSV}
+        >
+          Download CSV
         </button>
       </div>
     </div>
